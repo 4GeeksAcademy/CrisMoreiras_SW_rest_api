@@ -8,7 +8,7 @@ from flask_swagger import swagger
 from flask_cors import CORS
 from utils import APIException, generate_sitemap
 from admin import setup_admin
-from models import db, User
+from models import db, User, User2
 #from models import Person
 
 app = Flask(__name__)
@@ -36,9 +36,9 @@ def handle_invalid_usage(error):
 def sitemap():
     return generate_sitemap(app)
 
-@app.route('/user', methods=['GET'])
+@app.route('/user2', methods=['GET'])
 def get_name():
-    all_names = User.query.limit(1).all()
+    all_names = User2.query.limit(1).all()
     print (all_names)
 
     response_body = {
