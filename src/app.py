@@ -48,13 +48,10 @@ def get_name():
 @app.route('/planet', methods=['GET'])
 def get_planet():
     all_planets = Planet.query.all()
-    print (all_planets)
 
-    response_body = {
-        "msg": "debo leer planetas"
-    }
-
-    return jsonify(response_body), 200
+    results = list(map(lambda planet: planet.serialize() ,all_planets))
+    
+    return jsonify(results), 200
 
 # this only runs if `$ python src/app.py` is executed
 if __name__ == '__main__':

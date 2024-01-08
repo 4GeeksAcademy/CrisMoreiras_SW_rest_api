@@ -34,6 +34,9 @@ class User2(db.Model):
         return {
             "id": self.id,
             "name": self.name,
+            "last_name": self.last_name,
+            "email": self.email,
+            "user_name": self.user_name,
             # do not serialize the password, its a security breach
         }
 
@@ -51,6 +54,9 @@ class Planet(db.Model):
         return {
             "id": self.id,
             "name": self.name,
+            "diameter": self.diameter,
+            "rotation": self.rotation,
+            "climate": self.climate,
             # do not serialize the password, its a security breach
         }
      
