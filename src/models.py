@@ -36,4 +36,21 @@ class User2(db.Model):
             "name": self.name,
             # do not serialize the password, its a security breach
         }
+
+class Planet(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(250), nullable=False)
+    diameter = db.Column(db.Integer, nullable=False)
+    rotation = db.Column(db.Integer, nullable=False)
+    climate = db.Column(db.String(250), nullable=False)
     
+    def __repr__(self):
+        return '<Planet %r>' % self.name
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            # do not serialize the password, its a security breach
+        }
+     
