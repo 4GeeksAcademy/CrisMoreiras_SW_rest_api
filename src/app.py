@@ -39,13 +39,10 @@ def sitemap():
 @app.route('/user2', methods=['GET'])
 def get_name():
     all_names = User2.query.all()
-    print (all_names)
+  
+    results = list(map(lambda user2: user2.serialize() ,all_names))
 
-    response_body = {
-        "msg": "debo leer usuarios "
-    }
-
-    return jsonify(response_body), 200
+    return jsonify(results), 200
 
 
 @app.route('/planet', methods=['GET'])
