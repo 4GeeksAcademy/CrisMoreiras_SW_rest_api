@@ -42,17 +42,32 @@ def get_user():
     results = list(map(lambda user2: user2.serialize() ,all_names))
     return jsonify(results), 200
 
+@app.route('/user2/<int:user2_id>', methods=['GET'])
+def one_user(user2_id):
+    one_user = User2.query.get(user2_id)
+    return jsonify(one_user.serialize()), 200
+
 @app.route('/planet', methods=['GET'])
-def get_planet():
+def get_planets():
     all_planets = Planet.query.all()
     results = list(map(lambda planet: planet.serialize() ,all_planets))
     return jsonify(results), 200
+
+@app.route('/planet/<int:planet_id>', methods=['GET'])
+def get_planet(planet_id):
+    planet = Planet.query.get(planet_id)
+    return jsonify(planet.serialize()), 200
 
 @app.route('/character', methods=['GET'])
 def get_character():
     all_characters = Character.query.all()
     results = list(map(lambda character: character.serialize() ,all_characters))
     return jsonify(results), 200
+
+@app.route('/character/<int:character_id>', methods=['GET'])
+def one_character(character_id):
+    character = Character.query.get(character_id)
+    return jsonify(character.serialize()), 200
 
 # this only runs if `$ python src/app.py` is executed
 if __name__ == '__main__':
