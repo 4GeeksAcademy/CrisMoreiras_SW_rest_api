@@ -37,28 +37,21 @@ def sitemap():
     return generate_sitemap(app)
 
 @app.route('/user2', methods=['GET'])
-def get_name():
+def get_user():
     all_names = User2.query.all()
-  
     results = list(map(lambda user2: user2.serialize() ,all_names))
-
     return jsonify(results), 200
-
 
 @app.route('/planet', methods=['GET'])
 def get_planet():
     all_planets = Planet.query.all()
-
     results = list(map(lambda planet: planet.serialize() ,all_planets))
-    
     return jsonify(results), 200
 
 @app.route('/character', methods=['GET'])
 def get_character():
     all_characters = Character.query.all()
-
     results = list(map(lambda character: character.serialize() ,all_characters))
-    
     return jsonify(results), 200
 
 # this only runs if `$ python src/app.py` is executed
