@@ -26,7 +26,9 @@ class User2(db.Model):
     email = db.Column(db.String(250), nullable=False)
     user_name = db.Column(db.String(250), nullable=False)
     password = db.Column(db.String(250), nullable=False)
+    character_fav = db.relationship('Character', lazy=True)
     
+       
     def __repr__(self):
         return '<User2 %r>' % self.name
 
@@ -46,6 +48,9 @@ class Character(db.Model):
     gender = db.Column(db.String(250), nullable=False)
     specie = db.Column(db.String(250), nullable=False)
     planet = db.Column(db.String(250), nullable=False)
+    user2_id = db.Column(db.Integer, db.ForeignKey('user2.id'),
+        nullable=False)
+    
        
     def __repr__(self):
         return '<Character %r>' % self.name
@@ -80,14 +85,15 @@ class Planet(db.Model):
             # do not serialize the password, its a security breach
         }
     
+    #FAVORITOS#
+    
 class Character_fav(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user2_id = db.Column(db.Integer, db.ForeignKey("user2.id"))
-    character_id = db.Column(db.Integer, db.ForeignKey("character.id"))
-    user2 = db.relationship("User2", backref="character_fav")
-    character = db.relationship("Character", backref="character_fav")
+    user2_id = db.Column(db.Integer, db.ForeignKey("user2.id"), nullable=False)
+    user2_relatioship = db.relationship(User2)
+    character_id = db.Column(db.Integer, db.ForeignKey("character.id"), nullable=False)
+    character_relatioship = db.relationship(Character)
     
-   
     def __repr__(self):
         return '<Character_fav %r>' % self.id
 

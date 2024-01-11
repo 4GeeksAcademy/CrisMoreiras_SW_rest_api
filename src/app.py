@@ -75,6 +75,10 @@ def one_character(character_id):
     character = Character.query.get(character_id)
     return jsonify(character.serialize()), 200
 
+#PERSONAJES FAVORITOS#
+
+
+
 
 # this only runs if `$ python src/app.py` is executed
 if __name__ == '__main__':
