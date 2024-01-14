@@ -8,7 +8,7 @@ from flask_swagger import swagger
 from flask_cors import CORS
 from utils import APIException, generate_sitemap
 from admin import setup_admin
-from models import db, User, User2, Planet, Character, Character_fav
+from models import db, User, Planet, Character
 #from models import Person
 
 app = Flask(__name__)
@@ -38,15 +38,15 @@ def sitemap():
 
 #LISTAR USUARIOS / LISTAR UN USUARIO#
 
-@app.route('/user2', methods=['GET'])
+@app.route('/user', methods=['GET'])
 def get_user():
-    all_names = User2.query.all()
-    results = list(map(lambda user2: user2.serialize() ,all_names))
+    all_names = User.query.all()
+    results = list(map(lambda user: user.serialize() ,all_names))
     return jsonify(results), 200
 
-@app.route('/user2/<int:user2_id>', methods=['GET'])
-def one_user(user2_id):
-    one_user = User2.query.get(user2_id)
+@app.route('/user/<int:user_id>', methods=['GET'])
+def one_user(user_id):
+    one_user = User.query.get(user_id)
     return jsonify(one_user.serialize()), 200
 
 #LISTAR PLANETAS / LISTAR UN PLANETA#
@@ -76,6 +76,8 @@ def one_character(character_id):
     return jsonify(character.serialize()), 200
 
 #PERSONAJES FAVORITOS#
+
+
 
 
 
