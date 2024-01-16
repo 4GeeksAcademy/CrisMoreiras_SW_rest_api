@@ -36,12 +36,38 @@ def handle_invalid_usage(error):
 def sitemap():
     return generate_sitemap(app)
 
-#LISTAR USUARIOS / LISTAR UN USUARIO#
+#METODOS USUARIO#
+
+@app.route('/user', methods=['POST'])
+def add_new_user():
+    body = request.get_json()
+    
+    if (
+        "name" not in body
+        or "email" not in body
+        or "password" not in body
+    ):
+        return jsonify({"error": "Datos usuario incompletos"}), 400
+    
+    new_user = User(
+        name=body["name"],
+        email=body["email"],
+        password=body["password"],   
+    )
+    
+    db.session.add(new_user)
+    db.session.commit()
+
+    response_body = {
+        "msg": "Nuevo character añadido exitosamente"
+    }
+
+    return jsonify(response_body), 200
 
 @app.route('/user', methods=['GET'])
-def get_user():
-    all_names = User.query.all()
-    results = list(map(lambda user: user.serialize() ,all_names))
+def get_users():
+    all_users = User.query.all()
+    results = list(map(lambda user: user.serialize(), all_users))
     return jsonify(results), 200
 
 @app.route('/user/<int:user_id>', methods=['GET'])
@@ -49,20 +75,33 @@ def one_user(user_id):
     one_user = User.query.get(user_id)
     return jsonify(one_user.serialize()), 200
 
-#LISTAR PLANETAS / LISTAR UN PLANETA#
+#METODOS PERSONAJE#
 
-@app.route('/planet', methods=['GET'])
-def get_planets():
-    all_planets = Planet.query.all()
-    results = list(map(lambda planet: planet.serialize() ,all_planets))
-    return jsonify(results), 200
+@app.route('/character', methods=['POST'])
+def add_new_character():
+    body = request.get_json()
+    
+    if (
+        "name" not in body
+        or "gender" not in body
+        or "specie" not in body
+    ):
+        return jsonify({"error": "Datos personaje incompletos"}), 400
+    
+    new_character = Character(
+        name=body["name"],
+        gender=body["gender"],
+        specie=body["specie"]
+    )
+    
+    db.session.add(new_character)
+    db.session.commit()
 
-@app.route('/planet/<int:planet_id>', methods=['GET'])
-def get_planet(planet_id):
-    planet = Planet.query.get(planet_id)
-    return jsonify(planet.serialize()), 200
+    response_body = {
+        "msg": "Nuevo character añadido exitosamente"
+    }
 
-#LISTAR PERSONAJES / LISTAR UN PERSONAJE#
+    return jsonify(response_body), 200
 
 @app.route('/character', methods=['GET'])
 def get_character():
@@ -75,7 +114,21 @@ def one_character(character_id):
     character = Character.query.get(character_id)
     return jsonify(character.serialize()), 200
 
+#METODOS PLANETA#
+
+@app.route('/planet', methods=['GET'])
+def get_planets():
+    all_planets = Planet.query.all()
+    results = list(map(lambda planet: planet.serialize(), all_planets))
+    return jsonify(results), 200
+
+@app.route('/planet/<int:planet_id>', methods=['GET'])
+def get_planet(planet_id):
+    planet = Planet.query.get(planet_id)
+    return jsonify(planet.serialize()), 200
+
 #PERSONAJES FAVORITOS#
+
 
 
 
