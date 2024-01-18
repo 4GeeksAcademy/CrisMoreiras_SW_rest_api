@@ -8,7 +8,7 @@ from flask_swagger import swagger
 from flask_cors import CORS
 from utils import APIException, generate_sitemap
 from admin import setup_admin
-from models import db, User, Planet, Character
+from models import db, User, Planet, Character, Character_fav
 #from models import Person
 
 app = Flask(__name__)
@@ -43,14 +43,14 @@ def add_new_user():
     body = request.get_json()
     
     if (
-        "name" not in body
+        "username" not in body
         or "email" not in body
         or "password" not in body
     ):
         return jsonify({"error": "Datos usuario incompletos"}), 400
     
     new_user = User(
-        name=body["name"],
+        username=body["username"],
         email=body["email"],
         password=body["password"],   
     )
@@ -127,7 +127,49 @@ def get_planet(planet_id):
     planet = Planet.query.get(planet_id)
     return jsonify(planet.serialize()), 200
 
-#PERSONAJES FAVORITOS#
+######POST USER FAVORITE CHARACTER############
+
+@app.route('/character_fav', methods=['POST'])
+def add_new_character_fav():
+    request_body_fav_character = request.get_json()
+
+
+    if (
+        "character_id" not in request_body_fav_character
+        or "user_id" not in request_body_fav_character
+    ):
+        return jsonify({"error": "Datos incompletos"}), 400
+
+    
+    new_fav_character = Character_fav(
+        character_id=request_body_fav_character["character_id"],
+        user_id=request_body_fav_character["user_id"]
+    )
+    
+    db.session.add(new_fav_character)
+    db.session.commit()
+
+    response_body = {
+        "msg": "Nuevo character_fav añadido exitosamente"
+    }
+
+    return jsonify(response_body), 200
+
+################################# GET CHARACTER FAV BY USER ID ########################
+
+@app.route('/user/<int:user_id>/character_fav', methods=['GET'])
+def get_user_favorites(user_id):
+    user_favorites = Character_fav.query.filter_by(user_id=user_id).all()
+
+    results = map(lambda favorites: favorites.serialize(), user_favorites)
+    favorites_list = list(results)
+    return jsonify(favorites_list), 200
+
+
+
+
+
+
 
 
 
