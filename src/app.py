@@ -8,7 +8,7 @@ from flask_swagger import swagger
 from flask_cors import CORS
 from utils import APIException, generate_sitemap
 from admin import setup_admin
-from models import db, User, Planet, Character, Character_fav
+from models import db, User, Planet, Character, Character_fav, Planet_fav
 #from models import Person
 
 app = Flask(__name__)
@@ -162,6 +162,44 @@ def get_user_favorites(user_id):
     user_favorites = Character_fav.query.filter_by(user_id=user_id).all()
 
     results = map(lambda favorites: favorites.serialize(), user_favorites)
+    favorites_list = list(results)
+    return jsonify(favorites_list), 200
+
+######POST USER FAVORITE PLANET############
+
+@app.route('/planet_fav', methods=['POST'])
+def add_new_planet_fav():
+    request_body_fav_planet = request.get_json()
+
+
+    if (
+        "planet_id" not in request_body_fav_planet
+        or "user_id" not in request_body_fav_planet
+    ):
+        return jsonify({"error": "Datos incompletos"}), 400
+
+    
+    new_fav_planet = Planet_fav(
+        planet_id=request_body_fav_planet["planet_id"],
+        user_id=request_body_fav_planet["user_id"]
+    )
+    
+    db.session.add(new_fav_planet)
+    db.session.commit()
+
+    response_body = {
+        "msg": "Nuevo planeta_fav añadido exitosamente"
+    }
+
+    return jsonify(response_body), 200
+
+################################# GET planet FAV BY USER ID ########################
+
+@app.route('/user/<int:user_id>/planet_fav', methods=['GET'])
+def get_user_favorites_planet(user_id):
+    user_favorites_planet = Planet_fav.query.filter_by(user_id=user_id).all()
+
+    results = map(lambda favorites: favorites.serialize(), user_favorites_planet)
     favorites_list = list(results)
     return jsonify(favorites_list), 200
 
