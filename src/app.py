@@ -203,17 +203,63 @@ def get_user_favorites_planet(user_id):
     favorites_list = list(results)
     return jsonify(favorites_list), 200
 
+################################# DELETE planet FAV BY USER ID ########################
 
+@app.route('/user/<int:user_id>/planet_fav/<int:planet_id>', methods=['DELETE'])
+def delete_user_favorite_planet(user_id, planet_id):
+    
+    user = User.query.get(user_id)
+    if user is None:
+        return jsonify({"error": "Usuario no encontrado"}), 404
 
+    
+    planet = Planet.query.get(planet_id)
+    if planet is None:
+        return jsonify({"error": "Planeta no encontrado"}), 404
 
+    
+    favorite_planet = Planet_fav.query.filter_by(user_id=user_id, planet_id=planet_id).first()
+    if favorite_planet is None:
+        return jsonify({"error": "El usuario no tiene este planeta como favorito"}), 404
 
+    
+    db.session.delete(favorite_planet)
+    db.session.commit()
 
+    response_body = {
+        "msg": f"Planeta {planet_id} eliminado de los favoritos del usuario {user_id} exitosamente"
+    }
 
+    return jsonify(response_body), 200
 
+################################# DELETE character FAV BY USER ID ########################
 
+@app.route('/user/<int:user_id>/character_fav/<int:character_id>', methods=['DELETE'])
+def delete_user_favorite_character(user_id, character_id):
+    
+    user = User.query.get(user_id)
+    if user is None:
+        return jsonify({"error": "Usuario no encontrado"}), 404
 
+    
+    character = Character.query.get(character_id)
+    if character is None:
+        return jsonify({"error": "Character no encontrado"}), 404
 
+    
+    favorite_character = Character_fav.query.filter_by(user_id=user_id, character_id=character_id).first()
+    if favorite_character is None:
+        return jsonify({"error": "El usuario no tiene este character como favorito"}), 404
 
+    
+    db.session.delete(favorite_character)
+    db.session.commit()
+
+    response_body = {
+        "msg": f"Character {character_id} eliminado de los favoritos del usuario {user_id} exitosamente"
+    }
+
+    return jsonify(response_body), 200
 
 # this only runs if `$ python src/app.py` is executed
 if __name__ == '__main__':
